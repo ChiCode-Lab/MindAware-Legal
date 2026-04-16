@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account - MindAware</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            background-color: #050A0F;
+            color: #F8F9FA;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-md w-full bg-[#0F172A] rounded-3xl border border-white/10 p-8 shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none rounded-3xl">
+            <div class="absolute -top-1/2 -left-1/2 w-full h-full bg-[#00E6C8]/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="relative z-10 text-center">
+            <h1 class="text-3xl font-black tracking-widest mb-2">MindAware</h1>
+            <p class="text-[10px] text-gray-400 font-bold tracking-[0.25em] mb-8">ACCOUNT DELETION PORTAL</p>
+
+            <div id="step-1" class="space-y-6">
+                <p class="text-sm text-gray-300">
+                    To request the permanent deletion of your account, mindful minutes, Opals, and Zen Forest data, enter your email below to receive a secure deletion link.
+                </p>
+                <form id="emailForm" class="space-y-4">
+                    <input type="email" id="emailInput" required placeholder="Enter your email" 
+                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00E6C8] transition-colors">
+                    <button type="submit" id="sendBtn" 
+                        class="w-full bg-[#00E6C8] text-[#050A0F] font-bold py-3 px-4 rounded-xl hover:bg-[#00c5ab] transition-colors focus:ring-4 focus:ring-[#00E6C8]/30">
+                        Send Deletion Link
+                    </button>
+                </form>
+                <p id="sendMsg" class="text-sm hidden"></p>
+            </div>
+
+            <div id="step-2" class="space-y-6 hidden">
+                <div class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <h2 class="text-xl font-bold text-red-500">Confirm Deletion</h2>
+                <p class="text-sm text-gray-300">
+                    Warning: This action cannot be undone. Clicking below will permanently wipe all your data across MindAware.
+                </p>
+                <button id="deleteBtn" class="w-full bg-red-500 text-white font-bold py-3 px-4 rounded-xl hover:bg-red-600 transition-colors focus:ring-4 focus:ring-red-500/30">
+                    Permanently Delete My Data
+                </button>
+                <p id="deleteMsg" class="text-sm hidden"></p>
+            </div>
+
+            <div id="step-3" class="space-y-4 hidden py-8">
+                <div class="w-16 h-16 bg-[#00E6C8]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-[#00E6C8]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-xl font-bold text-[#00E6C8]">Account Deleted</h2>
+                <p class="text-sm text-gray-300">Your account and all associated data have been permanently wiped. You may now close this page.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://vnyjdvobvrmsqwpdvpco.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZueWpkdm9idnJtc3F3cGR2cGNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyOTkwNjQsImV4cCI6MjA4OTg3NTA2NH0.i5sgtH2I1X62qj9yR7HnVlU3Fd-a9z7fp2q260ZXTio';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const step1 = document.getElementById('step-1');
+        const step2 = document.getElementById('step-2');
+        const step3 = document.getElementById('step-3');
+        const emailForm = document.getElementById('emailForm');
+        const emailInput = document.getElementById('emailInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const sendMsg = document.getElementById('sendMsg');
+        const deleteBtn = document.getElementById('deleteBtn');
+        const deleteMsg = document.getElementById('deleteMsg');
+
+        supabase.auth.onAuthStateChange(async (event, session) => {
+            if (event === 'SIGNED_IN' && session) {
+                step1.classList.add('hidden');
+                step2.classList.remove('hidden');
+            }
+        });
+
+        emailForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Sending...';
+            sendMsg.classList.add('hidden');
+            
+            const email = emailInput.value.trim();
+            const currentUrl = window.location.href.split('#')[0];
+
+            const { error } = await supabase.auth.signInWithOtp({
+                email,
+                options: { emailRedirectTo: currentUrl }
+            });
+
+            if (error) {
+                sendMsg.textContent = error.message;
+                sendMsg.className = 'text-sm text-red-400 mt-4 block';
+            } else {
+                sendMsg.textContent = 'Check your email! Click the secure link we just sent to confirm deletion.';
+                sendMsg.className = 'text-sm text-[#00E6C8] mt-4 block';
+            }
+            sendBtn.disabled = false;
+            sendBtn.textContent = 'Send Deletion Link';
+        });
+
+        deleteBtn.addEventListener('click', async () => {
+            deleteBtn.disabled = true;
+            deleteBtn.textContent = 'Deleting...';
+            deleteMsg.classList.add('hidden');
+
+            const { error: rpcError } = await supabase.rpc('delete_user_account');
+
+            if (rpcError) {
+                deleteMsg.textContent = 'Error: ' + rpcError.message;
+                deleteMsg.className = 'text-sm text-red-500 mt-4 block';
+                deleteBtn.disabled = false;
+                deleteBtn.textContent = 'Permanently Delete My Data';
+            } else {
+                await supabase.auth.signOut();
+                step2.classList.add('hidden');
+                step3.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
