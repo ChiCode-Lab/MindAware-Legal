@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #050a0f;
+      --surface: #0f1419;
+      --border: rgba(255,255,255,0.08);
+      --ink: #f5f6fa;
+      --muted: #9ea5b5;
+      --dim: #4b5563;
+      --accent: #FF8A66;
+    }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 1rem;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem 6rem;
+    }
+    a.back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 0.875rem;
+      margin-bottom: 2.5rem;
+      transition: color 0.2s;
+    }
+    a.back:hover { color: var(--muted); }
+    h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .dates {
+      color: var(--dim);
+      font-size: 0.8125rem;
+      margin-bottom: 3rem;
+      line-height: 1.8;
+    }
+    .intro {
+      color: var(--muted);
+      margin-bottom: 3rem;
+      max-width: 60ch;
+    }
+    section { margin-bottom: 3rem; }
+    h2 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--accent);
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.25rem;
+    }
+    h3 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin: 1.25rem 0 0.5rem;
+    }
+    p { color: #c9cdd7; margin-bottom: 1rem; max-width: 68ch; }
+    ul { list-style: none; margin-bottom: 1rem; }
+    ul li {
+      display: flex;
+      gap: 0.6rem;
+      color: #c9cdd7;
+      margin-bottom: 0.6rem;
+      max-width: 68ch;
+    }
+    ul li::before {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 0.55rem;
+    }
+    strong { color: var(--ink); font-weight: 600; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .caps { text-transform: uppercase; font-size: 0.875rem; letter-spacing: 0.01em; }
+    footer {
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--dim);
+    }
+    @media (max-width: 600px) {
+      .wrap { padding: 3rem 1.25rem 4rem; }
+    }
+  </style>
+</head>
+<body>
